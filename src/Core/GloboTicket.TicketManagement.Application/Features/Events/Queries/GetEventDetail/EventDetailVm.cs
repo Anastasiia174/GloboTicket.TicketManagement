@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using GloboTicket.TicketManagement.Domain.Common;
 
-namespace GloboTicket.TicketManagement.Domain.Entities
+namespace GloboTicket.TicketManagement.Application.Features.Events.Queries.GetEventDetail
 {
-    public class Event : AuditableEntity
+    public class EventDetailVm
     {
         public Guid EventId { get; set; }
         public string Name { get; set; }
@@ -15,6 +14,6 @@ namespace GloboTicket.TicketManagement.Domain.Entities
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public Guid CategoryId { get; set; }
-        public Category Category { get; set; }
+        public CategoryDto Category { get; set; }
     }
 }

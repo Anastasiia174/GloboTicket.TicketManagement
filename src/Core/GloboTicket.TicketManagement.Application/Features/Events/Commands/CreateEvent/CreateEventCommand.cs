@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MediatR;
 
-namespace GloboTicket.TicketManagement.Application.Features.Events
+namespace GloboTicket.TicketManagement.Application.Features.Events.Commands.CreateEvent
 {
-    public class EventDetailVm
+    public class CreateEventCommand : IRequest<Guid>
     {
-        public Guid EventId { get; set; }
         public string Name { get; set; }
         public int Price { get; set; }
         public string Artist { get; set; }
@@ -14,6 +14,11 @@ namespace GloboTicket.TicketManagement.Application.Features.Events
         public string Description { get; set; }
         public string ImageUrl { get; set; }
         public Guid CategoryId { get; set; }
-        public CategoryDto Category { get; set; }
+
+        public override string ToString()
+        {
+            return
+                $"Event name: {Name}; Price: {Price}; By: {Artist}; On: {Date.ToShortDateString()}; Description: {Description}";
+        }
     }
 }
