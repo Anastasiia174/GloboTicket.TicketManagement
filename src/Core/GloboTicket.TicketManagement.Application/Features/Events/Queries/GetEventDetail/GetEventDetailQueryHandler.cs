@@ -28,9 +28,12 @@ namespace GloboTicket.TicketManagement.Application.Features.Events.Queries.GetEv
             var @event = await _eventRepository.GetByIdAsync(request.Id);
             var eventDetailDto = _mapper.Map<EventDetailVm>(@event);
 
-            var category = await _categoryRepository.GetByIdAsync(@event.CategoryId);
-            
-            eventDetailDto.Category = _mapper.Map<CategoryDto>(category);
+            if (@event != null)
+            {
+                var category = await _categoryRepository.GetByIdAsync(@event.CategoryId);
+
+                eventDetailDto.Category = _mapper.Map<CategoryDto>(category);
+            }
 
             return eventDetailDto;
         }
