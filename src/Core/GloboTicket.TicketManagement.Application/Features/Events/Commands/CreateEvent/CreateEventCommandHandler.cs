@@ -14,7 +14,7 @@ using MediatR;
 
 namespace GloboTicket.TicketManagement.Application.Features.Events.Commands.CreateEvent
 {
-    public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Guid>
+    public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, CreateEventCommandResponse>
     {
         private readonly IMapper _mapper;
         private readonly IEventRepository _eventRepository;
@@ -27,35 +27,47 @@ namespace GloboTicket.TicketManagement.Application.Features.Events.Commands.Crea
             _emailService = emailService;
         }
 
-        public async Task<Guid> Handle(CreateEventCommand request, CancellationToken cancellationToken)
+        public async Task<CreateEventCommandResponse> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {
+            var response = new CreateEventCommandResponse();
+
             var validator = new CreateEventCommandValidator(_eventRepository);
             var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
             if (validationResult.Errors.Any())
             {
-                throw new ValidationException(validationResult);
+                response.Success = false;
+                response.ValidationErrors = new List<string>();
+
+                validationResult.Errors.ForEach(e => response.ValidationErrors.Add(e.ErrorMessage));
             }
 
-            var @event = _mapper.Map<Event>(request);
-
-            @event = await _eventRepository.AddAsync(@event);
-
-            var email = new Email()
+            if (response.Success)
             {
-                To = "gill@snoball.be", Body = $"An event var created: {request}", Subject = "A new event was created"
-            };
+                var @event = _mapper.Map<Event>(request);
 
-            try
-            {
-                await _emailService.SendEmail(email);
+                @event = await _eventRepository.AddAsync(@event);
+                response.Event = _mapper.Map<CreateEventDto>(@event);
+
+                var email = new Email()
+                {
+                    To = "gill@snoball.be",
+                    Body = $"An event var created: {request}",
+                    Subject = "A new event was created"
+                };
+
+                try
+                {
+                    await _emailService.SendEmail(email);
+                }
+                catch (Exception ex)
+                {
+                    //logging 
+                }
             }
-            catch (Exception ex)
-            {
-                //logging 
-            }
+            
 
-            return @event.EventId;
+            return response;
         }
     }
 }

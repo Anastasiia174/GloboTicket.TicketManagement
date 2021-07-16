@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GloboTicket.TicketManagement.Api.Middleware;
 using GloboTicket.TicketManagement.Api.Utility;
 using GloboTicket.TicketManagement.Application;
 using GloboTicket.TicketManagement.Infrastructure;
@@ -72,6 +73,8 @@ namespace GloboTicket.TicketManagement.Api
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "GloboTicket Ticket Management API");
             });
+
+            app.UseCustomExceptionHandlerMiddleware();
 
             app.UseCors("Open");
 
