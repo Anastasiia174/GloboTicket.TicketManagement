@@ -28,7 +28,7 @@ namespace GloboTicket.TicketManagement.Application.Features.Categories.Commands.
 
         private async Task<bool> CategoryNameUnique(CreateCategoryCommand e, CancellationToken token)
         {
-            return !(await _categoryRepository.IsCategoryNameUnique(e.Name));
+            return await _categoryRepository.IsCategoryNameUnique(e.Name);
         }
     }
 }

@@ -16,6 +16,9 @@ namespace GloboTicket.TicketManagement.Persistence.Configurations
             builder.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50);
+
+            builder.Property(e => e.EventId)
+                .ValueGeneratedOnAdd();
         }
     }
 }
