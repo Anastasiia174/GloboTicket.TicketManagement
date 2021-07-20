@@ -34,6 +34,7 @@ namespace GloboTicket.TicketManagement.Api.Controllers
         [HttpGet(Name = "GetAllEvents")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
+        [ResponseCache(CacheProfileName = "Caching")]
         public async Task<ActionResult<List<EventListVm>>> GetAllEvents()
         {
             var dtos = await _mediator.Send(new GetEventsListQuery());

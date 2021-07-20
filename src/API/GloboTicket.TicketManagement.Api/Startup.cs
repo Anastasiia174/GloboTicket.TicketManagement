@@ -13,6 +13,7 @@ using GloboTicket.TicketManagement.Application;
 using GloboTicket.TicketManagement.Identity;
 using GloboTicket.TicketManagement.Infrastructure;
 using GloboTicket.TicketManagement.Persistence;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 
@@ -37,7 +38,13 @@ namespace GloboTicket.TicketManagement.Api
             services.AddInfrastructureServices(Configuration);
             services.AddPersistenceServices(Configuration);
             services.AddIdentityServices(Configuration);
-            services.AddControllers();
+            services.AddControllers(options =>
+                {
+                    options.CacheProfiles.Add("Caching", 
+                        new CacheProfile() { Duration = 300 });
+                    options.CacheProfiles.Add("NoCaching", 
+                        new CacheProfile() { Location = ResponseCacheLocation.None, NoStore = true});
+                });
 
             services.AddCors(options =>
             {
@@ -100,6 +107,13 @@ namespace GloboTicket.TicketManagement.Api
             app.UseCustomExceptionHandlerMiddleware();
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles(new  StaticFileOptions()
+            {
+                OnPrepareResponse = context =>
+                {
+                    context.Context.Response.Headers.Add("Cache-Control", "public,max-age=600");
+                }
+            });
             app.UseRouting();
             app.UseAuthentication();
 
