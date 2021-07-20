@@ -12,6 +12,7 @@ using System.Linq;
 using GloboTicket.TicketManagement.Application.Contracts.Identity;
 using GloboTicket.TicketManagement.Application.Models.Authentication;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace GloboTicket.TicketManagement.Identity.Services
@@ -92,7 +93,7 @@ namespace GloboTicket.TicketManagement.Identity.Services
                 }
                 else
                 {
-                    throw new Exception($"{result.Errors}");
+                    throw new Exception($"{JsonConvert.SerializeObject(result.Errors)}");
                 }
             }
             else
